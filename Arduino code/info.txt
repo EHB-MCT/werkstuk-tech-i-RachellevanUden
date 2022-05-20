@@ -1,1 +1,53 @@
 Zet hier de arduino code
+
+
+#include <dht.h>
+
+#define dht_apin A0 // Analog Pin sensor is connected to
+
+dht DHT;
+
+int red_light_pin = 11;
+int green_light_pin = 10;
+int blue_light_pin = 9;
+
+void setup() {
+
+  Serial.begin(9600);
+  delay(500);//Delay to let system boot
+  Serial.println("DHT11 Humidity & temperature Sensor\n\n");
+  delay(1000);//Wait before accessing Sensor
+
+  pinMode(red_light_pin, OUTPUT);
+  pinMode(green_light_pin, OUTPUT);
+  pinMode(blue_light_pin, OUTPUT);
+
+}//end "setup()"
+
+void loop() {
+  //Start of Program
+
+  DHT.read11(dht_apin);
+
+//  DHT.humidity;
+//  DHT.temperature;
+
+ Serial.println(DHT.humidity);
+  if (DHT.humidity <= 47) { //geel
+   RGB_color(255, 170, 0);
+  } else if (DHT.humidity <= 51) { //oranje
+    RGB_color(255, 100, 0);
+  } else if (DHT.humidity > 51) { //rood
+    RGB_color(255,0,0);
+  } else {
+    RGB_color(255, 255, 255); // wit
+ }
+
+
+}
+void RGB_color(int red_light_value, int green_light_value, int blue_light_value)
+{
+  analogWrite(red_light_pin, 255- red_light_value);
+  analogWrite(green_light_pin, 255 - green_light_value);
+  analogWrite(blue_light_pin, 255 - blue_light_value);
+}
